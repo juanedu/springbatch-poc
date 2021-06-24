@@ -3,11 +3,11 @@ package com.juanedu.springbatchpoc.demo;
 import lombok.Data;
 
 @Data
-public class DomObject {
+public class DomObjectIn {
 
-	private String clave;
-	private String datos;
-	private Integer delay;
+	protected String clave;
+	protected String datos;
+	protected Integer delay;
 
 	@Override
 	public String toString() {
