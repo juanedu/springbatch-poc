@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.Resource;
 
-import com.juanedu.springbatchpoc.demo.DomObject;
+import com.juanedu.springbatchpoc.demo.DomObjectIn;
 
 @EnableBatchProcessing
 @SpringBootApplication
@@ -48,7 +48,7 @@ public class BuildSampleFileJob {
 	@Bean
 	public Step chunkStep() {
 		return this.stepBuilderFactory.get("chunkStep")
-				.<DomObject, DomObject>chunk(500)
+				.<DomObjectIn, DomObjectIn>chunk(500)
 				.reader(bsfItemReader(100))
 				.writer(bsfItemWriter(null))
 				.build();
@@ -56,14 +56,14 @@ public class BuildSampleFileJob {
 
 	@StepScope
 	@Bean
-	public ListItemReader<DomObject> bsfItemReader(
+	public ListItemReader<DomObjectIn> bsfItemReader(
 			@Value("#{jobParameters['maxItems']}") int maxItems) {
 		
 		Random r = new Random();
         
-		List<DomObject> items = new ArrayList<>(maxItems);
+		List<DomObjectIn> items = new ArrayList<>(maxItems);
 		for (int i = 0; i < maxItems; i++) {
-			DomObject dobj = new DomObject();
+			DomObjectIn dobj = new DomObjectIn();
 			dobj.setClave(Integer.valueOf(r.nextInt((maxItems - 0) + 1)).toString());
 			dobj.setDatos(UUID.randomUUID().toString());
 			dobj.setDelay(r.nextInt((1000 - 0) + 1));
@@ -76,10 +76,10 @@ public class BuildSampleFileJob {
 	
 	@StepScope
 	@Bean
-	public FlatFileItemWriter<DomObject> bsfItemWriter(
+	public FlatFileItemWriter<DomObjectIn> bsfItemWriter(
 			@Value("#{jobParameters['outputFile']}") Resource outputFile) {
 		
-		return new FlatFileItemWriterBuilder<DomObject>()
+		return new FlatFileItemWriterBuilder<DomObjectIn>()
 				.name("bsfItemWriter")
 				.resource(outputFile)
 				.delimited()
