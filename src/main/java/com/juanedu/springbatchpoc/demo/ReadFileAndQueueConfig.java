@@ -33,7 +33,7 @@ public class ReadFileAndQueueConfig {
 				.<DomObjectIn, DomObjectIn>chunk(100)
 				.reader(fileItemReader(null))
 				.processor(itemProcessor())
-				.writer(queueItemWriter(null))
+				.writer(queueInItemWriter(null))
 				.build();
 	}
 
@@ -62,7 +62,7 @@ public class ReadFileAndQueueConfig {
 	}
 	
 	@Bean
-	public JmsItemWriter<DomObjectIn> queueItemWriter(JmsTemplate jmsTemplate) {
+	public JmsItemWriter<DomObjectIn> queueInItemWriter(JmsTemplate jmsTemplate) {
 
 		return new JmsItemWriterBuilder<DomObjectIn>()
 				.jmsTemplate(jmsTemplate)

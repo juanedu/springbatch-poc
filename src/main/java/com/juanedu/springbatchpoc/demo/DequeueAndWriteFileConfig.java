@@ -31,14 +31,14 @@ public class DequeueAndWriteFileConfig {
 	public Step dequeueAndWriteFileStep() {
 		return this.stepBuilderFactory.get("dequeueAndWriteFileStep")
 				.<DomObjectOut, DomObjectOut>chunk(100)
-				.reader(queueItemReader(null))
+				.reader(queueOutItemReader(null))
 				.processor(itemProcessor())
 				.writer(fileItemWriter(null))
 				.build();
 	}
 
 	@Bean
-	public JmsItemReader<DomObjectOut> queueItemReader(JmsTemplate jmsTemplate) {
+	public JmsItemReader<DomObjectOut> queueOutItemReader(JmsTemplate jmsTemplate) {
 
 		return new JmsItemReaderBuilder<DomObjectOut>()
 				.jmsTemplate(jmsTemplate)
