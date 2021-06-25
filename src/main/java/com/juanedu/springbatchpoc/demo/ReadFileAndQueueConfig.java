@@ -40,7 +40,7 @@ public class ReadFileAndQueueConfig {
 	@Bean
 	@StepScope
 	public FlatFileItemReader<DomObjectIn> fileItemReader(
-			@Value("#{jobParameters['file']}") Resource inputFile)
+			@Value("#{jobParameters['inputFile']}") Resource inputFile)
 	{
 		return new FlatFileItemReaderBuilder<DomObjectIn>()
 				.name("fileItemReader")

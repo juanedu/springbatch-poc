@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.jms.core.JmsTemplate;
 
 @EnableBatchProcessing
@@ -59,7 +59,7 @@ public class DequeueAndWriteFileConfig {
 	@Bean
 	@StepScope
 	public FlatFileItemWriter<DomObjectOut> fileItemWriter(
-			@Value("#{jobParameters['file']}") Resource outputFile)
+			@Value("#{jobParameters['outputFile']}") FileSystemResource outputFile)
 	{
 		return new FlatFileItemWriterBuilder<DomObjectOut>()
 				.name("fileItemWriter")
