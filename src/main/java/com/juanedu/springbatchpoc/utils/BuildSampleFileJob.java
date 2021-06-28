@@ -22,7 +22,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 
 import com.juanedu.springbatchpoc.demo.DomObjectIn;
 
@@ -77,7 +77,7 @@ public class BuildSampleFileJob {
 	@StepScope
 	@Bean
 	public FlatFileItemWriter<DomObjectIn> bsfItemWriter(
-			@Value("#{jobParameters['outputFile']}") Resource outputFile) {
+			@Value("#{jobParameters['outputFile']}") FileSystemResource outputFile) {
 		
 		return new FlatFileItemWriterBuilder<DomObjectIn>()
 				.name("bsfItemWriter")

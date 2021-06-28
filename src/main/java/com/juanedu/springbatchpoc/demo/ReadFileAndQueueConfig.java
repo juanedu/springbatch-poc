@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.jms.core.JmsTemplate;
 
 @EnableBatchProcessing
@@ -32,7 +32,7 @@ public class ReadFileAndQueueConfig {
 		return this.stepBuilderFactory.get("readFileAndQueueStep")
 				.<DomObjectIn, DomObjectIn>chunk(100)
 				.reader(fileItemReader(null))
-				.processor(itemProcessor())
+				.processor(readItemProcessor())
 				.writer(queueInItemWriter(null))
 				.build();
 	}
@@ -40,7 +40,7 @@ public class ReadFileAndQueueConfig {
 	@Bean
 	@StepScope
 	public FlatFileItemReader<DomObjectIn> fileItemReader(
-			@Value("#{jobParameters['inputFile']}") Resource inputFile)
+			@Value("#{jobParameters['inputFile']}") FileSystemResource inputFile)
 	{
 		return new FlatFileItemReaderBuilder<DomObjectIn>()
 				.name("fileItemReader")
@@ -53,7 +53,7 @@ public class ReadFileAndQueueConfig {
 
 	@Bean
 	@StepScope
-	public ItemProcessor<DomObjectIn, DomObjectIn> itemProcessor()
+	public ItemProcessor<DomObjectIn, DomObjectIn> readItemProcessor()
 	{
 		return item -> {
 			log.debug(item.toString());
@@ -62,10 +62,11 @@ public class ReadFileAndQueueConfig {
 	}
 	
 	@Bean
-	public JmsItemWriter<DomObjectIn> queueInItemWriter(JmsTemplate jmsTemplate) {
+	@StepScope
+	public JmsItemWriter<DomObjectIn> queueInItemWriter(JmsTemplate jmsTemplateIn) {
 
 		return new JmsItemWriterBuilder<DomObjectIn>()
-				.jmsTemplate(jmsTemplate)
+				.jmsTemplate(jmsTemplateIn)
 				.build();
 	}
 

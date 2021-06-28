@@ -32,23 +32,24 @@ public class DequeueAndWriteFileConfig {
 		return this.stepBuilderFactory.get("dequeueAndWriteFileStep")
 				.<DomObjectOut, DomObjectOut>chunk(100)
 				.reader(queueOutItemReader(null))
-				.processor(itemProcessor())
+				.processor(writeItemProcessor())
 				.writer(fileItemWriter(null))
 				.build();
 	}
 
 	@Bean
-	public JmsItemReader<DomObjectOut> queueOutItemReader(JmsTemplate jmsTemplate) {
+	@StepScope
+	public JmsItemReader<DomObjectOut> queueOutItemReader(JmsTemplate jmsTemplateOut) {
 
 		return new JmsItemReaderBuilder<DomObjectOut>()
-				.jmsTemplate(jmsTemplate)
+				.jmsTemplate(jmsTemplateOut)
 				.itemType(DomObjectOut.class)
 				.build();
 	}
 
 	@Bean
 	@StepScope
-	public ItemProcessor<DomObjectOut, DomObjectOut> itemProcessor()
+	public ItemProcessor<DomObjectOut, DomObjectOut> writeItemProcessor()
 	{
 		return item -> {
 			log.debug(item.toString());
